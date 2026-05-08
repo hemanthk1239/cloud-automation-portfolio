@@ -1,10 +1,11 @@
-# Azure Terraform: Resource Group + Storage Account
+# AWS Terraform: Basic VPC
 
 This Terraform example creates:
 
-- Azure Resource Group
-- Azure Storage Account
-- Standard tags
+- VPC
+- Public subnet
+- Internet Gateway
+- Public route table
 
 ## Usage
 
@@ -12,15 +13,10 @@ This Terraform example creates:
 terraform init
 terraform fmt
 terraform validate
-terraform plan \
-  -var="resource_group_name=rg-portfolio-demo" \
-  -var="storage_account_name=uniquestorageacct12345"
-
-terraform apply \
-  -var="resource_group_name=rg-portfolio-demo" \
-  -var="storage_account_name=uniquestorageacct12345"
+terraform plan
+terraform apply
 ```
 
 ## Notes
 
-Storage account names must be globally unique and use lowercase letters and numbers only.
+This is a basic portfolio example. For production workloads, include private subnets, NAT gateways, security groups, network ACLs, logging, tagging standards, and remote state.

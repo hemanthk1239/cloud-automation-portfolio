@@ -1,7 +1,7 @@
-output "resource_group_name" {
-  value = azurerm_resource_group.main.name
+output "vpc_id" {
+  value = aws_vpc.main.id
 }
 
-output "storage_account_name" {
-  value = azurerm_storage_account.main.name
+output "public_subnet_id" {
+  value = aws_subnet.public.id
 }

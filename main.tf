@@ -2,32 +2,61 @@ terraform {
   required_version = ">= 1.5.0"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.100"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
   }
 }
 
-provider "azurerm" {
-  features {}
+provider "aws" {
+  region = var.region
 }
 
-resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
-  location = var.location
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
-  tags = var.tags
+  tags = {
+    Name        = "portfolio-vpc"
+    Environment = "demo"
+    ManagedBy   = "terraform"
+  }
 }
 
-resource "azurerm_storage_account" "main" {
-  name                     = var.storage_account_name
-  resource_group_name      = azurerm_resource_group.main.name
-  location                 = azurerm_resource_group.main.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidr
+  map_public_ip_on_launch = true
 
-  min_tls_version = "TLS1_2"
+  tags = {
+    Name = "portfolio-public-subnet"
+  }
+}
 
-  tags = var.tags
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "portfolio-igw"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "portfolio-public-rt"
+  }
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
 }

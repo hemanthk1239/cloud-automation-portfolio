@@ -1,25 +1,17 @@
-variable "resource_group_name" {
-  description = "Name of the Azure Resource Group."
+variable "region" {
+  description = "AWS region."
   type        = string
+  default     = "ca-central-1"
 }
 
-variable "location" {
-  description = "Azure region."
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC."
   type        = string
-  default     = "canadacentral"
+  default     = "10.10.0.0/16"
 }
 
-variable "storage_account_name" {
-  description = "Globally unique Azure Storage Account name."
+variable "public_subnet_cidr" {
+  description = "CIDR block for the public subnet."
   type        = string
-}
-
-variable "tags" {
-  description = "Common resource tags."
-  type        = map(string)
-  default = {
-    environment = "demo"
-    owner       = "portfolio"
-    managedBy   = "terraform"
-  }
+  default     = "10.10.1.0/24"
 }
